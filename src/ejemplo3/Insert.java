@@ -2,7 +2,7 @@
 package ejemplo3;
 import java.sql.*;
 
-public class Principal {
+public class Insert {
 
     public static void main(String[] args) {
        Connection conexion = ConexionMysqlBDEnriptar.obtenerConexion();
