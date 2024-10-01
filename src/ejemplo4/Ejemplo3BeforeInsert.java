@@ -21,7 +21,7 @@ public class Ejemplo3BeforeInsert {
                     System.out.println("CLAVE NO VALIDA");
                 } else {
                     PreparedStatement ps = conexion.prepareStatement(query);
-                    ps.setString(1, "Anonimo");  // Cambiar nombre en el índice 1
+                    ps.setString(1, "Luis");  // Cambiar nombre en el índice 1
                     ps.setString(2, clave);  // Asignar la clave en el índice 2
                     int filasAfectadas = ps.executeUpdate(); // Devuelve el número de filas afectadas
                     

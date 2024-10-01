@@ -18,7 +18,7 @@ public class Ejemplo2AfterInsert {
                     System.out.println("SALARIO NO VALIDO");
                 } else {
                     PreparedStatement ps = conexion.prepareStatement(query);
-                    ps.setString(1, "Anonimo");  // Cambiar nombre en el índice 1
+                    ps.setString(1, "Luis");  // Cambiar nombre en el índice 1
                     ps.setInt(2, salario);  // Especificar el SALARIO en el índice 2
                     int filasAfectadas = ps.executeUpdate(); // Devuelve el número de filas afectadas
                     

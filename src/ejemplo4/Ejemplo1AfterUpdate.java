@@ -13,7 +13,7 @@ public class Ejemplo1AfterUpdate {
             String query = "UPDATE usuario SET nombre = ?, clave = 'XYZ' WHERE id_usuario = ?;";
             try {
                 PreparedStatement ps = conexion.prepareStatement(query);
-                ps.setString(1, "Anonimo");  // Cambiar nombre en el índice 1
+                ps.setString(1, "Luis");  // Cambiar nombre en el índice 1
                 ps.setInt(2, 2);  // Especificar el id_usuario en el índice 2
                 int n = ps.executeUpdate(); //INSERT UPDATE DELETE
                 if(n > 0){
