@@ -1,0 +1,12 @@
+DROP TRIGGER IF EXISTS before_insert_empleado;
+
+-- QUERY PARA CREAR EL TRIGER
+
+CREATE TRIGGER before_insert_empleado
+BEFORE INSERT ON Empleado
+FOR EACH ROW
+BEGIN
+    IF NEW.salario < 0 THEN
+        SET NEW.salario = 0;
+    END IF;
+END;
