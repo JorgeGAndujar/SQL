@@ -18,6 +18,7 @@ public class PrincipalCommitRollBack {
             System.out.println("ERROR: CONEXION");
         }
     }
+
     public static void menu(Connection conexion) {
         while (true) {
             cls();
@@ -45,100 +46,107 @@ public class PrincipalCommitRollBack {
                     cls();
                     confirmarTransaccion(conexion);
                     pause();
-                    break;  
-                case "4": 
+                    break;
+                case "4":
                     cls();
                     descartarTransaccion(conexion);
                     pause();
                     break;
-                case "5": 
+                case "5":
                     cls();
                     mostrarTablaCliente(conexion);
                     pause();
                     break;
-                case "6": 
+                case "6":
                     System.exit(0);
-                    break;//el break no tiene porque hacer falta
-                    
+                    break;//el break no tiene porque hacer falta       
             }
         }
     }
-    public static void mostrarTablaCliente(Connection conexion){
+
+    public static void mostrarTablaCliente(Connection conexion) {
         String query = "SELECT * FROM Cliente";
-        try{
+        try {
             PreparedStatement ps = conexion.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-            System.out.printf("%-4s %-10s %-15s\n","ID","NOMBRE","EMAIL");
-            while(rs.next()){
+            System.out.printf("%-4s %-10s %-15s\n", "ID", "NOMBRE", "EMAIL");
+            while (rs.next()) {
                 String nombre = rs.getString("nombre");
                 String email = rs.getString("email");
                 int idCliente = rs.getInt("id_cliente");//igual q la query("id_cliente")
-                System.out.printf("%-4d %-10s %-15s\n",idCliente,nombre,email);
+                System.out.printf("%-4d %-10s %-15s\n", idCliente, nombre, email);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("ERROR: SELECT" + e);
         }
     }
-    public static void activarPuntoRestauracion(Connection conexion){
-        try{
+
+    public static void activarPuntoRestauracion(Connection conexion) {
+        try {
             conexion.setAutoCommit(false);//STAR TRANSACTION   
-            
-        }catch(SQLException e){
+
+        } catch (SQLException e) {
             System.out.println("ERROR AL ACTIVAR PUNTO DE RESTAURACIÓN");
-            
+
         }
     }
-    public static void descartarTransaccion(Connection conexion){
-        try{
+
+    public static void descartarTransaccion(Connection conexion) {
+        try {
             conexion.rollback();//DESCARTAR CAMBIOS  
             System.out.println("CAMBIOS DESCARTADOS: ROLLBACK");
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("ERROR ROLLBACK: CAMBIOS NO DESCARTADOS");
-            
+
         }
     }
-    public static void confirmarTransaccion(Connection conexion){
-        try{
+
+    public static void confirmarTransaccion(Connection conexion) {
+        try {
             conexion.commit();//CONFIRMAR CAMBIOS
             System.out.println("CAMBIOS CONFIRMAR COMMIT");
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("ERROR AL CONFIRMAR COMMIT");
-            
+
         }
     }
-    public static void realizarTransaccionUpdate(Connection conexion){
+
+    public static void realizarTransaccionUpdate(Connection conexion) {
         String query = "UPDATE Cliente SET nombre = ?, email = ? WHERE id_cliente = ?";
-        try{
+        try {
             PreparedStatement ps = conexion.prepareStatement(query);
             ps.setString(1, nombre());
             ps.setString(2, email());
             ps.setInt(3, idCliente());
             int filaAfectada = ps.executeUpdate();
-            if(filaAfectada > 0){
+            if (filaAfectada > 0) {
                 System.out.println("OK: UPDATE");
-            }else {
+            } else {
                 System.out.println("ERROR: UPDATE");
-            }    
-        }catch(SQLException e){
-            System.out.println("ERROR AL REALIZAR TRANSACCIÓN UPDATE");    
+            }
+        } catch (SQLException e) {
+            System.out.println("ERROR AL REALIZAR TRANSACCIÓN UPDATE");
         }
-    }  
-    public static String nombre(){
+    }
+
+    public static String nombre() {
         System.out.print("Ingrese nombre nuevo? ");
         String nombre = sc.next();
-        return nombre;    
+        return nombre;
     }
-    public static String email(){
+
+    public static String email() {
         System.out.print("Ingrese email nuevo? ");
         String email = sc.next();
-        return email;  
+        return email;
     }
-    public static int idCliente(){
+
+    public static int idCliente() {
         System.out.print("Ingrese id_cliente? ");
         int idCliente = sc.nextInt();
-        return idCliente;   
-    } 
-    
+        return idCliente;
+    }
+
     public static void pause() {
         try {
             System.out.print("\nPresiona una tecla para continuar...");
