@@ -84,7 +84,7 @@ public class PrincipalCommitRollBack {
     public static void activarPuntoRestauracion(Connection conexion) {
         try {
             conexion.setAutoCommit(false);//STAR TRANSACTION   
-
+            System.out.println("PUNTO DE RESTAURACIÓN ACTIVADO");
         } catch (SQLException e) {
             System.out.println("ERROR AL ACTIVAR PUNTO DE RESTAURACIÓN");
 
