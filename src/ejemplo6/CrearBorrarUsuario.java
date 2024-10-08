@@ -1,6 +1,5 @@
 package ejemplo6;
 
-import static ejemplo6.PrincipalCommitRollBack.sc;
 import java.io.*;
 import java.sql.*;
 import java.util.Scanner;
@@ -30,7 +29,8 @@ public class CrearBorrarUsuario {
             System.out.println("5. ELIMINAR USUARIO");
             System.out.println("6. CREAR PRIVILEGIOS AL USUARIO NUEVO");
             System.out.println("7. MOSTRAR LA TABLA DE PRIVILEGIOS(EJ:Cliente)");
-            System.out.println("8. SALIR");
+            System.out.println("8. MOSTRAR USUARIOS Y PRIVILEGIOS");
+            System.out.println("9. SALIR");
 
             System.out.print("INGRESE OPCION? ");
             String opcion = sc.next();
@@ -71,6 +71,11 @@ public class CrearBorrarUsuario {
                     pause();
                     break;
                 case "8":
+                    cls();
+                    mostrarUsuariosPrivilegios(conexion);
+                    pause();
+                    break;
+                case "9":    
                     System.exit(0);
                     break;//el break no tiene porque hacer falta       
             }
@@ -78,7 +83,6 @@ public class CrearBorrarUsuario {
     }
 
     public static void mostrarTablaPrivilegios(Connection conexion) {
-        Scanner sc = new Scanner(System.in);
         System.out.print("Ingrese nombre de la tabla de privilegios: ");
         String tabla = sc.next();
 
@@ -101,6 +105,32 @@ public class CrearBorrarUsuario {
             }
         } catch (SQLException e) {
             System.out.println("ERROR AL MOSTRAR LA TABLA: " + e.getMessage());
+        }
+    }
+
+    public static void mostrarUsuariosPrivilegios(Connection conexion) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Ingrese Usuario (dejar en blanco para mostrar todos): ");
+        String user = sc.nextLine();
+
+        String query = "SELECT USER, HOST FROM MYSQL.USER";
+        if (!user.isEmpty()) {
+            query += " WHERE USER = ?";
+        }
+
+        try (PreparedStatement ps = conexion.prepareStatement(query)) {
+            if (!user.isEmpty()) {
+                ps.setString(1, user);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String usuario = rs.getString("USER");
+                String host = rs.getString("HOST");
+                System.out.println("Usuario: " + usuario + ", Host: " + host);
+            }
+        } catch (SQLException e) {
+            System.out.println("ERROR: " + e.getMessage());
         }
     }
 
@@ -234,6 +264,7 @@ public class CrearBorrarUsuario {
         }
         return false;
     }
+
     public static String nombre() {
         System.out.print("Ingrese nombre nuevo? ");
         String nombre = sc.next();
