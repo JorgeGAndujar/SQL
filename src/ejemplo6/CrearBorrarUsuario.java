@@ -64,9 +64,34 @@ public class CrearBorrarUsuario {
                     pause();
                     break;
                 case "7":
+                    cls();
+                    mostrarTablaPrivilegios(conexion);
+                    pause();
+                    break;
+                case "8":
                     System.exit(0);
                     break;//el break no tiene porque hacer falta       
             }
+        }
+    }
+
+    public static void mostrarTablaPrivilegios(Connection conexion) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Ingrese nombre de la tabla de privilegios: ");
+        String tabla = sc.next();
+
+        String query = "SELECT * FROM " + tabla + ";";
+
+        try (PreparedStatement ps = conexion.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                // Puedes procesar los resultados aquí si es necesario
+                System.out.println("La tabla " + tabla + " existe.");
+            } else {
+                System.out.println("No se encontraron registros en la tabla " + tabla + ".");
+            }
+        } catch (SQLException e) {
+            System.out.println("ERROR AL MOSTRAR LA TABLA: " + e.getMessage());
         }
     }
 
@@ -174,6 +199,14 @@ public class CrearBorrarUsuario {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query); // Ejecución del comando
             System.out.println("OK: SE OBTUVO PRIVILEGIOS AL USUARIO " + usuario);
+        } catch (SQLException e) {
+            System.out.println("ERROR EN LOS PRIVILEGIOS: " + e.getMessage());
+        }
+        String query2 = "FLUSH PRIVILEGES";
+        try {
+            Statement stmt = conexion.createStatement();
+            stmt.executeUpdate(query2); // Ejecución del comando
+            System.out.println("OK: SE OBTUVO TODOS LOS PRIVILEGIOS AL USUARIO " + usuario);
         } catch (SQLException e) {
             System.out.println("ERROR EN LOS PRIVILEGIOS: " + e.getMessage());
         }
