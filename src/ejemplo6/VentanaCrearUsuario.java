@@ -96,6 +96,8 @@ public class VentanaCrearUsuario extends javax.swing.JFrame {
         if(usuario.length()>0 && clave.length()>0){
            if(!Metodos.usuarioExiste(conexion, usuario)){
                Metodos.crearUsuario(conexion, usuario, clave);
+               txtNombre.setText("");
+               txtClave.setText("");
            }else{
                JOptionPane.showMessageDialog(null,"Usuario ya existe", "Información",JOptionPane.INFORMATION_MESSAGE); 
            }
