@@ -1,5 +1,6 @@
 package ejemplo6;
 
+import static ejemplo6.PrincipalCommitRollBack.sc;
 import java.io.*;
 import java.sql.*;
 import java.util.Scanner;
@@ -88,6 +89,13 @@ public class CrearBorrarUsuario {
             if (rs.next()) {
                 // Puedes procesar los resultados aquí si es necesario
                 System.out.println("La tabla " + tabla + " existe.");
+                System.out.printf("%-4s %-10s %-15s\n", "ID", "NOMBRE", "EMAIL");
+                while (rs.next()) {
+                    String nombre = rs.getString("nombre");
+                    String email = rs.getString("email");
+                    int idCliente = rs.getInt("id_cliente");//igual q la query("id_cliente")
+                    System.out.printf("%-4d %-10s %-15s\n", idCliente, nombre, email);
+                }
             } else {
                 System.out.println("No se encontraron registros en la tabla " + tabla + ".");
             }
@@ -225,5 +233,22 @@ public class CrearBorrarUsuario {
             System.out.println("ERROR AL VERIFICAR USUARIO: " + e.getMessage());
         }
         return false;
+    }
+    public static String nombre() {
+        System.out.print("Ingrese nombre nuevo? ");
+        String nombre = sc.next();
+        return nombre;
+    }
+
+    public static String email() {
+        System.out.print("Ingrese email nuevo? ");
+        String email = sc.next();
+        return email;
+    }
+
+    public static int idCliente() {
+        System.out.print("Ingrese id_cliente? ");
+        int idCliente = sc.nextInt();
+        return idCliente;
     }
 }
