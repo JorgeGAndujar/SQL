@@ -245,9 +245,9 @@ public class CrearBorrarUsuario {
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query2); // Ejecución del comando
-            System.out.println("OK: SE OBTUVO TODOS LOS PRIVILEGIOS AL USUARIO " + usuario);
+            System.out.println("OK: PRIVILEGIOS ACTUALIZADOS " + usuario);
         } catch (SQLException e) {
-            System.out.println("ERROR EN LOS PRIVILEGIOS: " + e.getMessage());
+            System.out.println("ERROR EN ACTUALIZAR LOS PRIVILEGIOS: " + e.getMessage());
         }
     }
 
