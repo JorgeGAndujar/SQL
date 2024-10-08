@@ -13,6 +13,7 @@ public class VentanaCrearUsuario extends javax.swing.JFrame {
         initComponents();
         lstMostrar.setModel(dlm);
         cargarListaMostrar();
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -44,7 +45,7 @@ public class VentanaCrearUsuario extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("CREAR USUARIOS Y ASIGNARLE PRIVILEGIOS");
+        jLabel1.setText("CREAR Y ELIMINAR USUARIOS");
 
         jLabel2.setText("INGRESE NOMBRE USUARIO");
 

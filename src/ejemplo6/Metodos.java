@@ -1,15 +1,6 @@
 package ejemplo6;
 
-import static ejemplo6.CrearBorrarUsuario.baseDatos;
-import static ejemplo6.CrearBorrarUsuario.clave;
-import static ejemplo6.CrearBorrarUsuario.usuario;
-import static ejemplo6.CrearBorrarUsuario.usuarioExiste;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import javax.swing.*;
 
 public class Metodos {
@@ -117,6 +108,14 @@ public class Metodos {
             System.out.println("OK: PRIVILEGIOS ACTUALIZADOS " + usuario);
         } catch (SQLException e) {
             System.out.println("ERROR EN ACTUALIZAR LOS PRIVILEGIOS: " + e.getMessage());
+        }
+    }
+
+    public static void mostrarPrivilegios(Connection conexion,DefaultListModel dlm2 ) {
+        String[] privilegios = {"ALL", "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP"};
+        // Agregar los privilegios a dlm2
+        for (String privilegio : privilegios) {
+            dlm2.addElement(privilegio); // Suponiendo que dlm2 es un DefaultListModel
         }
     }
 
