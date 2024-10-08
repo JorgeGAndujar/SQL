@@ -28,7 +28,8 @@ public class CrearBorrarUsuario {
             System.out.println("4. DESCARTAR TRANSACCIÓN (ROLLBACK)");
             System.out.println("5. ELIMINAR USUARIO");
             System.out.println("6. CREAR PRIVILEGIOS AL USUARIO NUEVO");
-            System.out.println("7. SALIR");
+            System.out.println("7. MOSTRAR LA TABLA DE PRIVILEGIOS(EJ:Cliente)");
+            System.out.println("8. SALIR");
 
             System.out.print("INGRESE OPCION? ");
             String opcion = sc.next();
