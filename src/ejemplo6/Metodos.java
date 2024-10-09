@@ -85,22 +85,21 @@ public class Metodos {
     public static void CrearPrivilegiosUsuarioNuevo(Connection conexion, String usuario, String[] privilegios) {
         String query = "";
         PreparedStatement ps = null;
-        try {
-            if (privilegios[0].equals("ALL PRIVILEGES")) {
-                query = "GRANT ALL PRIVILEGES ON BDTRANSACCIONES.* TO '" + usuario + "'@'localhost';";
-                ps = conexion.prepareStatement(query);
-                ps.executeUpdate();
-            } else {
-                for (String privilegio : privilegios) {
-                    query = "GRANT " + privilegio + " ON BDTRANSACCIONES.* TO '" + usuario + "'@'localhost';";
-                    ps = conexion.prepareStatement(query);
-                    ps.executeUpdate();
-                }
-            }
-
-        } catch (SQLException e) {
-            System.out.println("ERROR EN LOS PRIVILEGIOS: " + e.getMessage());
+        String s = "";
+        for(String privilegio: privilegios){
+            s = s + privilegio + ","; // s = Insert,Select,
         }
+        s = s.substring(0,s.length()-1);
+        System.out.println("Privilegios: " + s);
+        query = "GRANT " + s + " ON BDTRANSACCIONES.* TO '" + usuario + "'@'localhost';";
+        try{
+            ps = conexion.prepareStatement(query);
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null,"OTORGAR PRIVILEGIOS OK", "Información",JOptionPane.INFORMATION_MESSAGE);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,"ERROR AL OTORGAR PRIVILEGIOS", "Información",JOptionPane.INFORMATION_MESSAGE);
+        }
+        
         String query2 = "FLUSH PRIVILEGES";
         try {
             Statement stmt = conexion.createStatement();
