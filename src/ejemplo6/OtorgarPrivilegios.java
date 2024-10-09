@@ -36,6 +36,7 @@ public class OtorgarPrivilegios extends javax.swing.JFrame {
         lstPrivilegios = new javax.swing.JList<>();
         cmdOtorgarPrivilegios = new javax.swing.JButton();
         cmdRefrescarUsuarios = new javax.swing.JButton();
+        cmdRevocarPrivilegios = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -67,6 +68,13 @@ public class OtorgarPrivilegios extends javax.swing.JFrame {
             }
         });
 
+        cmdRevocarPrivilegios.setText("REVOCAR PRIVILEGIOS");
+        cmdRevocarPrivilegios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdRevocarPrivilegiosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -91,7 +99,9 @@ public class OtorgarPrivilegios extends javax.swing.JFrame {
                                 .addGap(25, 25, 25))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(31, 31, 31)
-                                .addComponent(cmdOtorgarPrivilegios, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(cmdRevocarPrivilegios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmdOtorgarPrivilegios, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
                                 .addGap(11, 11, 11)))))
                 .addContainerGap())
         );
@@ -107,7 +117,9 @@ public class OtorgarPrivilegios extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmdOtorgarPrivilegios)
                     .addComponent(cmdRefrescarUsuarios))
-                .addGap(0, 26, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(cmdRevocarPrivilegios)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
@@ -156,6 +168,41 @@ public class OtorgarPrivilegios extends javax.swing.JFrame {
         Metodos.showUsers(conexion, dlm1);
       
     }//GEN-LAST:event_cmdRefrescarUsuariosActionPerformed
+
+    private void cmdRevocarPrivilegiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRevocarPrivilegiosActionPerformed
+      int i = lstMostrarUsuarios.getSelectedIndex(); // Obtener el índice del usuario seleccionado
+        if (i == -1) {
+            System.out.println("No se ha seleccionado ningún usuario.");
+            return; // Salir si no hay usuario seleccionado
+        }
+
+        String usuario = (String) dlm1.getElementAt(i); // Obtener el usuario seleccionado
+
+        int[] privilegiosIndices = lstPrivilegios.getSelectedIndices(); // Obtener índices de privilegios seleccionados
+        if (privilegiosIndices.length == 0) {
+            System.out.println("No se han seleccionado privilegios.");
+            return; // Salir si no hay privilegios seleccionados
+        }
+
+        String[] privilegiosUsuarios = new String[privilegiosIndices.length];
+        int j = 0;
+
+        // Recopilar los privilegios seleccionados
+        for (int index : privilegiosIndices) {
+            String privilegio = (String) dlm2.getElementAt(index); // Obtener privilegio
+            privilegiosUsuarios[j] = privilegio; // Almacenar privilegio en el array
+            j++;
+        }
+
+        // Imprimir los privilegios que se otorgarán
+        System.out.println("Quitando los siguientes privilegios al usuario: " + usuario);
+        for (String privilegio : privilegiosUsuarios) {
+            System.out.println(privilegio);
+            // Aquí podrías agregar la lógica para otorgar el privilegio al usuario en la base de datos
+            // por ejemplo: otorgarPrivilegio(usuario, privilegio);
+        }
+        Metodos.revocarPrvilegios(conexion, usuario, privilegiosUsuarios);
+    }//GEN-LAST:event_cmdRevocarPrivilegiosActionPerformed
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -167,6 +214,7 @@ public class OtorgarPrivilegios extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdOtorgarPrivilegios;
     private javax.swing.JButton cmdRefrescarUsuarios;
+    private javax.swing.JButton cmdRevocarPrivilegios;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

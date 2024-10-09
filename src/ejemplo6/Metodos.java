@@ -86,20 +86,20 @@ public class Metodos {
         String query = "";
         PreparedStatement ps = null;
         String s = "";
-        for(String privilegio: privilegios){
+        for (String privilegio : privilegios) {
             s = s + privilegio + ","; // s = Insert,Select,
         }
-        s = s.substring(0,s.length()-1);
+        s = s.substring(0, s.length() - 1);
         System.out.println("Privilegios: " + s);
         query = "GRANT " + s + " ON BDTRANSACCIONES.* TO '" + usuario + "'@'localhost';";
-        try{
+        try {
             ps = conexion.prepareStatement(query);
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null,"OTORGAR PRIVILEGIOS OK", "Información",JOptionPane.INFORMATION_MESSAGE);
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"ERROR AL OTORGAR PRIVILEGIOS", "Información",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "OTORGAR PRIVILEGIOS OK", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERROR AL OTORGAR PRIVILEGIOS", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
-        
+
         String query2 = "FLUSH PRIVILEGES";
         try {
             Statement stmt = conexion.createStatement();
@@ -110,7 +110,7 @@ public class Metodos {
         }
     }
 
-    public static void mostrarPrivilegios(Connection conexion,DefaultListModel dlm2 ) {
+    public static void mostrarPrivilegios(Connection conexion, DefaultListModel dlm2) {
         String[] privilegios = {"ALL", "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP"};
         // Agregar los privilegios a dlm2
         for (String privilegio : privilegios) {
@@ -118,4 +118,33 @@ public class Metodos {
         }
     }
 
+    public static void revocarPrvilegios(Connection conexion, String usuario, String[] privilegios) {
+        String query = "";
+        PreparedStatement ps = null;
+        String s = "";
+        for (String privilegio : privilegios) {
+            s = s + privilegio + ","; // s = Insert,Select,
+        }
+        s = s.substring(0, s.length() - 1);
+        System.out.println("Privilegios: " + s);
+        query = "REVOKE " + s + " ON BDTRANSACCIONES.* FROM '" + usuario + "'@'localhost';";
+        try {
+            ps = conexion.prepareStatement(query);
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "OTORGAR PRIVILEGIOS OK", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "ERROR AL OTORGAR PRIVILEGIOS", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        String query2 = "FLUSH PRIVILEGES";
+        try {
+            Statement stmt = conexion.createStatement();
+            stmt.executeUpdate(query2); // Ejecución del comando
+            System.out.println("OK: PRIVILEGIOS QUITADO " + usuario);
+        } catch (SQLException e) {
+            System.out.println("ERROR AL QUITAR LOS PRIVILEGIOS: " + e.getMessage());
+        }
+    }
 }
+
+
