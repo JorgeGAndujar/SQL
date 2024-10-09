@@ -1,4 +1,4 @@
-package ejemplo9;
+package ejemploMihai;
 
 import java.sql.*;
 import javax.swing.*;

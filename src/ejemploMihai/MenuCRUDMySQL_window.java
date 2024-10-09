@@ -1,4 +1,4 @@
-package ejemplo9;
+package ejemploMihai;
 
 import java.awt.*;
 import javax.swing.*;
