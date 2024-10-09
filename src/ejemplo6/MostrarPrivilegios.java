@@ -4,19 +4,22 @@
  */
 package ejemplo6;
 
-import java.sql.Connection;
+import java.sql.*;
 import javax.swing.DefaultListModel;
 
-
 public class MostrarPrivilegios extends javax.swing.JFrame {
+
     Connection conexion = Metodos.obtenerConexion();
     DefaultListModel dlm1 = new DefaultListModel();
-    
+    DefaultListModel dlm2 = new DefaultListModel();
+
     public MostrarPrivilegios() {
         initComponents();
         lstMostrarUsuarios.setModel(dlm1);
+        lstMostrarPrivilegios.setModel(dlm2);
         cargarListaMostrarUsuarios();
     }
+
     public void cargarListaMostrarUsuarios() {
         Metodos.showUsers(conexion, dlm1);
     }
@@ -32,6 +35,8 @@ public class MostrarPrivilegios extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         lstMostrarPrivilegios = new javax.swing.JList<>();
         cmdRefrescarUsuarios = new javax.swing.JButton();
+        cmdMostrarPrivilegios = new javax.swing.JButton();
+        cmdRefrescarPrivilegios = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -53,21 +58,37 @@ public class MostrarPrivilegios extends javax.swing.JFrame {
             }
         });
 
+        cmdMostrarPrivilegios.setText("MOSTRAR PRIVILEGIOS");
+        cmdMostrarPrivilegios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdMostrarPrivilegiosActionPerformed(evt);
+            }
+        });
+
+        cmdRefrescarPrivilegios.setText("REFRESCAR PRIVILEGIOS");
+        cmdRefrescarPrivilegios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdRefrescarPrivilegiosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmdRefrescarUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(68, 68, 68)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmdRefrescarUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmdRefrescarPrivilegios, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(cmdMostrarPrivilegios, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -78,8 +99,12 @@ public class MostrarPrivilegios extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(cmdRefrescarUsuarios)
-                .addGap(0, 43, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmdRefrescarUsuarios)
+                    .addComponent(cmdMostrarPrivilegios))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(cmdRefrescarPrivilegios)
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -90,6 +115,64 @@ public class MostrarPrivilegios extends javax.swing.JFrame {
         Metodos.showUsers(conexion, dlm1);
 
     }//GEN-LAST:event_cmdRefrescarUsuariosActionPerformed
+
+    private void cmdMostrarPrivilegiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdMostrarPrivilegiosActionPerformed
+        int i = lstMostrarUsuarios.getSelectedIndex(); // Obtener el índice del usuario seleccionado
+        if (i == -1) {
+            System.out.println("No se ha seleccionado ningún usuario.");
+            return; // Salir si no hay usuario seleccionado
+        }
+
+        String usuario = (String) dlm1.getElementAt(i); // Obtener el usuario seleccionado
+        String query = "SHOW GRANTS FOR '" + usuario + "'@'localhost'"; // Corregido para usar comillas
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(query);
+            ResultSet rs = ps.executeQuery(); // Ejecutar la consulta
+
+            while (rs.next()) {
+                String privilegioCompleto = rs.getString(1); // Obtener el privilegio completo
+
+                // Extraer solo la parte entre "GRANT" y "ON"
+                String[] partes = privilegioCompleto.split(" ");
+                int grantIndex = -1;
+                int onIndex = -1;
+
+                // Buscar índices de "GRANT" y "ON"
+                for (int j = 0; j < partes.length; j++) {
+                    if (partes[j].equalsIgnoreCase("GRANT")) {
+                        grantIndex = j;
+                    } else if (partes[j].equalsIgnoreCase("ON")) {
+                        onIndex = j;
+                        break; // Salir del bucle una vez que encontramos "ON"
+                    }
+                }
+
+                // Si encontramos "GRANT" y "ON", extraer el texto entre ellos
+                if (grantIndex != -1 && onIndex != -1 && onIndex > grantIndex + 1) {
+                    StringBuilder privilegioExtraido = new StringBuilder();
+                    for (int k = grantIndex + 1; k < onIndex; k++) {
+                        privilegioExtraido.append(partes[k]).append(" ");
+                    }
+                    dlm2.clear();
+                    dlm2.addElement(privilegioExtraido.toString().trim()); // Agregar al modelo
+                }
+            }
+
+            // Actualizar la lista con los privilegios extraídos
+            //lstMostrarPrivilegios.setModel(modeloPrivilegios);
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejo de excepciones
+        }
+    }//GEN-LAST:event_cmdMostrarPrivilegiosActionPerformed
+
+    private void cmdRefrescarPrivilegiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRefrescarPrivilegiosActionPerformed
+
+        System.out.println("entro");
+        dlm2.clear();
+
+
+    }//GEN-LAST:event_cmdRefrescarPrivilegiosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -127,6 +210,8 @@ public class MostrarPrivilegios extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cmdMostrarPrivilegios;
+    private javax.swing.JButton cmdRefrescarPrivilegios;
     private javax.swing.JButton cmdRefrescarUsuarios;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

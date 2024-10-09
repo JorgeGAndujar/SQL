@@ -131,9 +131,9 @@ public class Metodos {
         try {
             ps = conexion.prepareStatement(query);
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "OTORGAR PRIVILEGIOS OK", "Información", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "OK: REVOKE PRIVILEGIOS", "Información", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "ERROR AL OTORGAR PRIVILEGIOS", "Información", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "ERROR REVOKE PRIVILEGIOS", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
 
         String query2 = "FLUSH PRIVILEGES";
